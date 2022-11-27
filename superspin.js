@@ -4,7 +4,7 @@ window.addEventListener('load', function(){
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
 
-    const foods = []
+
 
     class InputHandler{
         constructor(){
@@ -28,45 +28,66 @@ window.addEventListener('load', function(){
     }
     
     class GameControler{
-        constructor(player, players){
-            this.player = player
+        constructor(players, regions){
             this.players = players
+            this.regions = regions
         
         }
 
-        control(){
-            let results = []
-            this.players.forEach(element => {
-                if (
-                    element.globalX < (this.player.globalX + (viewPortWidth / 2)) && 
-                    element.globalX > (this.player.globalX - (viewPortWidth / 2)) &&
-                    element.globalY < (this.player.globalY + (viewPortHeight / 2)) &&
-                    element.globalY > (this.player.globalY - (viewPortHeight / 2))
-                    ){
-                        let diffX = (((this.player.globalX + (viewPortWidth / 2)) - element.globalX) / viewPortWidth) * 100
-                        let diffY = (((this.player.globalY + (viewPortHeight / 2)) - element.globalY) / viewPortHeight) * 100
+        getElementsInsideObjectRegion(player){
+            player.regionIn.forEach(objectRegion => {
+                objectRegion.objectsInside.forEach(object =>{
+                    if (object.globalX < (player.globalX + (viewPortWidth / 2)) && 
+                        object.globalX > (player.globalX - (viewPortWidth / 2)) &&
+                        object.globalY < (player.globalY + (viewPortHeight / 2)) &&
+                        object.globalY > (player.globalY - (viewPortHeight / 2))){
+
+                        let diffX = (((player.globalX + (viewPortWidth / 2)) - object.globalX) / viewPortWidth)
+                        let diffY = (((player.globalY + (viewPortHeight / 2)) - object.globalY) / viewPortHeight)
+
+                        let VPx = diffX * canvas.width
+                        let VPy = diffY * canvas.height
     
-
-                        let VPx = (diffX / 100) * canvas.width
-                        let VPy = (diffY / 100) * canvas.height
-
                         let isTouchingPlayer = false
 
-                        if (imagesTouching(this.player.x, this.player.y, this.player.size, this.player.size, VPx, VPy, element.size, element.size)){
+                        if (imagesTouching(player.x, player.y, player.size, player.size, VPx, VPy, object.size, object.size)){
                             isTouchingPlayer = true
                         }
-
-                        results.push([element, VPx, VPy, isTouchingPlayer])
-                }
+    
+                        // results.push([object, VPx, VPy, isTouchingPlayer])
+                        // if (object.constructor.name == 'Bot') {console.log(true)}  
+                        object.draw(ctx, player, VPx, VPy, isTouchingPlayer)
+                    }
+                })  
             });
-        return results
+        }
+
+        isInsideRegion(region, object){
+            // console.log(false, object.globalX, object.globalY, region.globalX, region.globalY)
+            if (object.globalX > region.globalX &&
+                object.globalX < (region.globalX + regionWidth) &&
+                object.globalY > region.globalY &&
+                object.globalY < (region.globalY + regionHeight)){
+                return true
+            }
         }
     }
 
+    class Region{
+        constructor(globalX, globalY){
+            this.globalX = globalX
+            this.globalY = globalY
+            this.objectsInside = []
+
+        }
+
+
+
+    }
 
     class Spinner{
-        constructor(gameWidth, gameHeight){
-            this.gameWidth = gameWidth;
+            constructor(gameWidth, gameHeight){
+                this.gameWidth = gameWidth;
             this.gameHeight = gameHeight;
             this.size = 200 
             this.image = document.getElementById('spinner')
@@ -80,8 +101,10 @@ window.addEventListener('load', function(){
             this.score = 0
             this.degreeIncrease = 0.1;
             this.isSprinting = false;
-            this.sprintInterval = 25
+            this.sprintInterval = 15
             this.countInterval = 1
+            this.regionIn = []
+
 
         }
 
@@ -199,6 +222,8 @@ window.addEventListener('load', function(){
             this.destinationX = 0
             this.destinationY = 0
             this.isMoving = false
+            this.regionIn = []
+
         }
 
         move(){
@@ -207,7 +232,7 @@ window.addEventListener('load', function(){
             let diffX = this.globalX - this.destinationX
             let diffY = this.globalY - this.destinationY
 
-            
+
             if (diffX > 0){
                 this.globalX -= 0.5;
             } else if (diffX < 0){
@@ -215,7 +240,7 @@ window.addEventListener('load', function(){
             }
 
             if (diffY > 0){
-                this.globalY -= 1;
+                 this.globalY -= 1;
             } else if (diffY < 0){
                 this.globalY += 1;
             }
@@ -224,6 +249,15 @@ window.addEventListener('load', function(){
             } 
 
     }
+
+    increaseSize(){
+        this.score += 1
+        this.size += 1
+
+    }
+
+
+
 
     draw(context, player, VPx, VPy, isTouchingPlayer){
 
@@ -254,7 +288,14 @@ window.addEventListener('load', function(){
 
             if (isTouchingPlayer){
                 player.increaseSize()
-                foods.splice(foods.indexOf(this), 1)
+                player.regionIn.forEach(playerRegion =>{
+                    playerRegion.objectsInside.forEach(objectInsideRegion =>{
+                        if (objectInsideRegion == this){
+                            playerRegion.objectsInside.splice(playerRegion.objectsInside.indexOf(this), 1)
+                        }
+                    })
+                })
+
             } else {
                 context.drawImage(this.image, VPx, VPy, this.size, this.size)
             }
@@ -285,23 +326,49 @@ window.addEventListener('load', function(){
             context.arc(circleX, circleY, 10, 0, 2 * Math.PI)
             context.fill()        
             context.stroke()
-            
+         
+        
+        }
+
+        update(playerx, playery, x, y, width, height){
+            this.playerX = playerx
+            this.playerY = playery
+            this.x = x
+            this.y = y
+            this.width = width
+            this.height = height
+
         }
 
     }
 
     function disturbuteFood(num, x=null, y=null){
-
-            for (let i = 0; i < num; i++) {
-                if (x == null && y == null){
-   
-                    foods.push(new Food(canvas.width, canvas.height, (Math.random() * worldWidth), (Math.random() * worldHeight)))
-                } else {
-         
-                    foods.push(new Food(canvas.width, canvas.height, x, y))                    
-                }
-            } 
+        var g  = new GameControler([], [])
+        for (let i = 0; i < num; i++) {
+            if (x == null && y == null){
+                foodX = Math.random() * worldWidth
+                foodY = Math.random() * worldHeight
+                var food = new Food(canvas.width, canvas.height, foodX, foodY)
+                regions.forEach(region => {
+                    isInside = g.isInsideRegion(region, food)
+                    if (isInside){
+                        region.objectsInside.push(food)
+                    }
+                })
+            } else {
+                regions.forEach(region =>{
+                    var food = new Food(canvas.width, canvas.height, x, y)
+                    isInside = g.isInsideRegion(region, food)
+                    if (isInside){
+                        region.objectsInside.push(food)
+                    }
+                })
+       
+            }
+        } 
     }
+
+
 
     function imagesTouching(x1, y1, w1, h1, x2, y2, w2, h2) {
         if (x1 >= x2+w2 || x1+w1 <= x2) return false;   // too far to the side
@@ -324,8 +391,18 @@ window.addEventListener('load', function(){
 
 
     var bots = []
-    for (let i = 0; i < 31; i++) {
-        bots.push(new Bot(Math.random() * (Math.random() * worldWidth), Math.random() * (Math.random() * worldHeight)))
+    for (let i = 0; i < 10; i++) {
+        bots.push(new Bot(Math.random() * worldWidth, Math.random() * worldHeight))
+    }
+
+    const regionWidth = 1000
+    const regionHeight = 1000
+
+    var regions = []
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++){
+            regions.push(new Region(regionWidth*i, regionHeight*j) )
+        }
     }
 
 
@@ -338,49 +415,62 @@ window.addEventListener('load', function(){
         disturbuteFood(250)
     }, 10000)
 
+    const minimap = new MiniMap(canvas.width - (canvas.width / (0.0025*canvas.width) + 10), canvas.height - (canvas.height / (0.0025*canvas.height) + 10), canvas.width / (0.0025*canvas.width) , canvas.height / (0.0025*canvas.height), player.globalX, player.globalY)
+    const spinnerGameControler = new GameControler([player], regions)
+
     function animate(){
-
-        var spinnerGameControler = new GameControler(bots.concat(player), foods.concat(bots))
-
-        var miniMap = new MiniMap(canvas.width - (canvas.width / (0.0025*canvas.width) + 10), canvas.height - (canvas.height / (0.0025*canvas.height) + 10), canvas.width / (0.0025*canvas.width) , canvas.height / (0.0025*canvas.height), player.globalX, player.globalY)
+    
 
         canvas.width = window.innerWidth
         canvas.height = window.innerHeight
-        // console.log(bots[0].globalX, bots[0].globalY, player.globalX, player.globalY)
-        
-
 
         ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+        minimap.update(
+            player.globalX,
+            player.globalY,
+            canvas.width - (canvas.width / (0.0025*canvas.width) + 10), 
+            canvas.height - (canvas.height / (0.0025*canvas.height) + 10), 
+            canvas.width / (0.0025*canvas.width) , canvas.height / (0.0025*canvas.height), 
+            player.globalX, player.globalY
 
+        )
+
+
+        regions.forEach(region =>{
+            playerInside = spinnerGameControler.isInsideRegion(region, player)
+            if (playerInside){
+                player.regionIn = []
+                player.regionIn.push(region)
+            }
+
+            bots.forEach(bot =>{
+                botInside = spinnerGameControler.isInsideRegion(region, bot);
+                index = region.objectsInside.indexOf(bot);
+                if (botInside){
+                    bot.regionIn = []
+                    bot.regionIn.push(region)
+                    if (index == -1) {
+                        region.objectsInside.push(bot)
+                    }
+                } else {
+                    if (index != -1) {
+                        region.objectsInside.splice(index, 1);
+                    }
+                }
+                spinnerGameControler.getElementsInsideObjectRegion(bot)
+            }) 
+        })
 
         player.draw(ctx);
         player.update(input);
-        
-        let result = spinnerGameControler.control()
 
         displayText(ctx, player.score, player.x + (player.size / 2) - (0.2  * player.size), player.y + player.size + 100, "80px Arial", "white") 
         
-        result.forEach(element => {    
-            element[0].draw(ctx, player, element[1], element[2], element[3])
-
-        })
-
-
-        bots.forEach(bot =>{
-            if (!bot.isMoving){
-
-                bot.destinationX = Math.random() * (Math.random() * worldWidth),
-                bot.destinationY = Math.random() * (Math.random() * worldHeight)          
-                bot.move()
- 
-            } else if (bot.isMoving){
-
-                bot.move()
-            }
-        })
-        miniMap.render(ctx)
-
+        spinnerGameControler.getElementsInsideObjectRegion(player)
+        
+        minimap.render(ctx)
+  
         viewPortWidth = (player.size / 2) + 50;
         viewPortHeight = (player.size / 2) + 50;   
         
