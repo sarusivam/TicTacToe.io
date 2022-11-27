@@ -57,8 +57,6 @@ window.addEventListener('load', function(){
                         }
 
                         results.push([element, VPx, VPy, isTouchingPlayer])
-                } else {
-                    results.push(false)
                 }
             });
         return results
@@ -342,7 +340,7 @@ window.addEventListener('load', function(){
 
     function animate(){
 
-        var spinnerGameControler = new GameControler(player, foods.concat(bots))
+        var spinnerGameControler = new GameControler(bots.concat(player), foods.concat(bots))
 
         var miniMap = new MiniMap(canvas.width - (canvas.width / (0.0025*canvas.width) + 10), canvas.height - (canvas.height / (0.0025*canvas.height) + 10), canvas.width / (0.0025*canvas.width) , canvas.height / (0.0025*canvas.height), player.globalX, player.globalY)
 
@@ -363,10 +361,9 @@ window.addEventListener('load', function(){
 
         displayText(ctx, player.score, player.x + (player.size / 2) - (0.2  * player.size), player.y + player.size + 100, "80px Arial", "white") 
         
-        result.forEach(element => {
-            if (element != false){
-                element[0].draw(ctx, player, element[1], element[2], element[3])
-            }
+        result.forEach(element => {    
+            element[0].draw(ctx, player, element[1], element[2], element[3])
+
         })
 
 
