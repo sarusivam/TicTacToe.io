@@ -1,4 +1,6 @@
 window.addEventListener('load', function(){
+
+
     const canvas = this.document.getElementById("viewPort");
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth
@@ -23,7 +25,7 @@ window.addEventListener('load', function(){
             }) 
             window.addEventListener('mouseup', e=>{
                 this.mouseDown = false
-            })
+            }) 
         }
     }
     
@@ -50,34 +52,49 @@ window.addEventListener('load', function(){
     
                         let isTouchingPlayer = false
 
-                        if (imagesTouching(player.x, player.y, player.size, player.size, VPx, VPy, object.size, object.size)){
+                        // console.log((player.size / canvas.width) * viewPortWidth)
+                        if (imagesTouching(player.globalX, player.globalY, (player.size / canvas.width) * viewPortWidth, (player.size / canvas.height) * viewPortHeight, object.globalX, object.globalY, (object.size / canvas.width) * viewPortWidth, (object.size / canvas.height) * viewPortHeight)){
                             isTouchingPlayer = true
                         }
     
-                        // results.push([object, VPx, VPy, isTouchingPlayer])
-                        // if (object.constructor.name == 'Bot') {console.log(true)}  
+
                         object.draw(ctx, player, VPx, VPy, isTouchingPlayer)
                     }
                 })  
             });
         }
 
-        isInsideRegion(region, object){
-            // console.log(false, object.globalX, object.globalY, region.globalX, region.globalY)
-            if (object.globalX > region.globalX &&
-                object.globalX < (region.globalX + regionWidth) &&
+        isInsideRegion(region, object, type='player'){
+            if (type == 'player'){
+                if ((object.globalX > region.globalX &&
+                object.globalX < (region.globalX + region.width) &&
                 object.globalY > region.globalY &&
-                object.globalY < (region.globalY + regionHeight)){
-                return true
+                object.globalY < (region.globalY + region.height)) ||
+                (object.globalX + (viewPortWidth / 2) > region.globalX && 
+                object.globalX - (viewPortWidth / 2) < region.globalX) || 
+                (object.globalY + (viewPortHeight / 2) > region.globalY && 
+                object.globalY - (viewPortHeight / 2) < region.globalY)){
+                    return true
+                }
+            } else {
+                if ((object.globalX > region.globalX &&
+                    object.globalX < (region.globalX + region.width) &&
+                    object.globalY > region.globalY &&
+                    object.globalY < (region.globalY + region.height))){
+                        return true
+                    }
             }
         }
     }
 
     class Region{
-        constructor(globalX, globalY){
+        constructor(globalX, globalY, width, height, surroundingRegions=[]){
             this.globalX = globalX
             this.globalY = globalY
             this.objectsInside = []
+            this.surroundingRegions = surroundingRegions
+            this.width = width
+            this.height = height
 
         }
 
@@ -104,6 +121,7 @@ window.addEventListener('load', function(){
             this.sprintInterval = 15
             this.countInterval = 1
             this.regionIn = []
+            this.name = 'Player'
 
 
         }
@@ -213,7 +231,7 @@ window.addEventListener('load', function(){
     }
 
     class Bot{
-        constructor(globalX, globalY){
+        constructor(globalX, globalY, name){
             this.globalX = globalX
             this.globalY = globalY
             this.size = 200
@@ -223,6 +241,7 @@ window.addEventListener('load', function(){
             this.destinationY = 0
             this.isMoving = false
             this.regionIn = []
+            this.name = name
 
         }
 
@@ -234,19 +253,19 @@ window.addEventListener('load', function(){
 
 
             if (diffX > 0){
-                this.globalX -= 0.5;
+                this.globalX -= 0.01;
             } else if (diffX < 0){
-                this.globalX += 0.5;
+                this.globalX += 0.01;
             }
 
             if (diffY > 0){
-                 this.globalY -= 1;
+                 this.globalY -= 0.01;
             } else if (diffY < 0){
-                this.globalY += 1;
+                this.globalY += 0.01;
             }
-            if (diffX == 0 && diffY == 0){
+            if (Math.round(diffX) == 0 && Math.round(diffY) == 0){
                 this.isMoving = false
-            } 
+            }
 
     }
 
@@ -262,7 +281,6 @@ window.addEventListener('load', function(){
     draw(context, player, VPx, VPy, isTouchingPlayer){
 
         context.drawImage(this.image, VPx,  VPy, this.size, this.size)
-
 
 
         displayText(context, this.score, VPx + (this.size / 2) - (0.2  * this.size), VPy + this.size + 100, "80px Arial", "white")
@@ -306,33 +324,44 @@ window.addEventListener('load', function(){
         }
         
     class MiniMap{
-        constructor(x, y, width, height, playerX, playerY){
+        constructor(x, y, width, height, player, botsList){
             this.x = x
             this.y = y
             this.width = width
             this.height = height
-            this.playerX = playerX
-            this.playerY = playerY
+            this.player = player
+            this.bots = botsList
         }
 
         render(context){
             context.fillStyle = '#0f0f0f'
             context.fillRect(this.x, this.y, this.width, this.height)
-            let circleX = (((worldWidth - this.playerX) / worldWidth) * this.width) + this.x
-            let circleY = (((worldHeight - this.playerY) / worldHeight) * this.height) + this.y
-            context.strokeStyle = "#FFFFFF"
-            context.beginPath();
-            context.fillStyle = "#FFFFFF"
-            context.arc(circleX, circleY, 10, 0, 2 * Math.PI)
-            context.fill()        
-            context.stroke()
+            let allMovingEntities = this.bots.concat([player])
+
+            allMovingEntities.forEach(entity => {
+                let circleX = (((worldWidth - entity.globalX) / worldWidth) * this.width) + this.x
+                let circleY = (((worldHeight - entity.globalY) / worldHeight) * this.height) + this.y
+                context.beginPath();
+
+                if (entity.constructor.name == 'Spinner'){
+                    context.strokeStyle = "#FFFFFF"
+                    context.fillStyle = "#FFFFFF"
+                } else {
+                    context.strokeStyle = "#FF0000"
+                    context.fillStyle = "#FF0000"
+                }
+
+                context.arc(circleX, circleY, 10, 0, 2 * Math.PI)
+                context.fill()        
+                context.stroke()
+            })
          
         
         }
 
-        update(playerx, playery, x, y, width, height){
-            this.playerX = playerx
-            this.playerY = playery
+        update(player, bots, x, y, width, height){
+            this.playerX = player
+            this.bots = bots
             this.x = x
             this.y = y
             this.width = width
@@ -388,20 +417,29 @@ window.addEventListener('load', function(){
     const input = new InputHandler()
     const player = new Spinner(canvas.width, canvas.height)
 
-
+    const botNames = [
+        'Hacker',
+        'George',
+        'Dream',
+        'Technoblade',
+        'Captain',
+        'Newton',
+        'Einstein',
+        'Sapnap',
+        'IronMan',
+        'Thor'
+    ]
 
     var bots = []
     for (let i = 0; i < 10; i++) {
-        bots.push(new Bot(Math.random() * worldWidth, Math.random() * worldHeight))
+        bots.push(new Bot(Math.random() * worldWidth, Math.random() * worldHeight, botNames[i]))
     }
-
-    const regionWidth = 1000
-    const regionHeight = 1000
 
     var regions = []
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 10; j++){
-            regions.push(new Region(regionWidth*i, regionHeight*j) )
+            regions.push(new Region((worldWidth / 10)*i, (worldHeight / 10)*j, worldWidth / 10, worldHeight / 10) )
+
         }
     }
 
@@ -414,8 +452,8 @@ window.addEventListener('load', function(){
     setInterval(function(){
         disturbuteFood(250)
     }, 10000)
-
-    const minimap = new MiniMap(canvas.width - (canvas.width / (0.0025*canvas.width) + 10), canvas.height - (canvas.height / (0.0025*canvas.height) + 10), canvas.width / (0.0025*canvas.width) , canvas.height / (0.0025*canvas.height), player.globalX, player.globalY)
+ 
+    const minimap = new MiniMap(canvas.width - (canvas.width / (0.0025*canvas.width) + 10), canvas.height - (canvas.height / (0.0025*canvas.height) + 10), canvas.width / (0.0025*canvas.width) , canvas.height / (0.0025*canvas.height), player, bots)
     const spinnerGameControler = new GameControler([player], regions)
 
     function animate(){
@@ -427,36 +465,62 @@ window.addEventListener('load', function(){
         ctx.clearRect(0, 0, canvas.width, canvas.height)
 
         minimap.update(
-            player.globalX,
-            player.globalY,
+            player,
+            bots,
             canvas.width - (canvas.width / (0.0025*canvas.width) + 10), 
             canvas.height - (canvas.height / (0.0025*canvas.height) + 10), 
-            canvas.width / (0.0025*canvas.width) , canvas.height / (0.0025*canvas.height), 
-            player.globalX, player.globalY
-
+            canvas.width / (0.0025*canvas.width), 
+            canvas.height / (0.0025*canvas.height)
+ 
         )
 
 
         regions.forEach(region =>{
             playerInside = spinnerGameControler.isInsideRegion(region, player)
+            let regionAldreadyInList = false
+            player.regionIn.forEach(playerInRegion =>{
+                if (playerInRegion == region){
+                    regionAldreadyInList = true
+                }
+            })
             if (playerInside){
-                player.regionIn = []
-                player.regionIn.push(region)
+                if (!regionAldreadyInList){
+                    player.regionIn.push(region)
+                }
             }
 
+            if (!playerInside){
+
+                if (regionAldreadyInList){
+                    player.regionIn.splice(player.regionIn.indexOf(region), 1)
+                
+                }
+
+            }
+
+
             bots.forEach(bot =>{
-                botInside = spinnerGameControler.isInsideRegion(region, bot);
+                botInside = spinnerGameControler.isInsideRegion(region, bot, 'bot');
                 index = region.objectsInside.indexOf(bot);
                 if (botInside){
                     bot.regionIn = []
                     bot.regionIn.push(region)
                     if (index == -1) {
+
                         region.objectsInside.push(bot)
                     }
                 } else {
                     if (index != -1) {
+
                         region.objectsInside.splice(index, 1);
                     }
+                }
+                if (!bot.isMoving){
+                    bot.destinationX = Math.random() * worldWidth
+                    bot.destinationY = Math.random() * worldHeight
+                    bot.move()
+                } else {
+                    bot.move()
                 }
                 spinnerGameControler.getElementsInsideObjectRegion(bot)
             }) 
@@ -474,6 +538,29 @@ window.addEventListener('load', function(){
         viewPortWidth = (player.size / 2) + 50;
         viewPortHeight = (player.size / 2) + 50;   
         
+        let movingEntities = bots.concat([player])
+        movinEntities = movingEntities.sort(function(a, b){
+            if (a.score > b.score){
+                return 1
+            }
+            if (b.score > a.score){
+                return - 1
+            }
+            return 0
+        })
+
+        movingEntities =  movingEntities.reverse()
+
+        for (let i=0; i < 10; i++){
+            let font = '80px Arial'
+            let fontColor = 'white'
+            if (i == 0){
+                font = '100px Arial'
+                fontColor = 'red'
+            }
+            displayText(ctx, movingEntities[i].name + ' - ' + movingEntities[i].score, 100, 100 + (i * 100), font, fontColor)
+        }
+
         requestAnimationFrame(animate);
     }
     animate()
