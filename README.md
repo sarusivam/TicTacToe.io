@@ -22,15 +22,13 @@ The main **objectives** are:
 
 ## Version
 
-Alpha 0.1.9
+Alpha 0.1.9 XP
 
 ## Future updates
 
 ### Next update
 
 **Alpha 0.2** is the next update. The next update :
-
-* Fixes the bug, where only 1 region is shown at a time
 
 * Adds new features such as :
     * killing other bots
@@ -39,13 +37,11 @@ Alpha 0.1.9
 
 #### Code
 
-* Code will be changesd to fully-object-oriented with proper design and classes
+* Code will be changesd to fully-object-oriented with proper design and classes *in 1.2.2 XP*
 
 ### Other updates
 
 * Multi-player
-
-* Leaderboard showing top ten players
 
 ## Compantabilitly
 
@@ -53,5 +49,5 @@ Device | Check
 -------|-------
 Mobile | false
 Tablet | false
-Laptop | true
-PC     | true
+Laptop | *WIP*
+PC     | *WIP* 
