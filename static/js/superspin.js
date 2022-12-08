@@ -121,7 +121,7 @@ window.addEventListener('load', function(){
             this.sprintInterval = 15
             this.countInterval = 1
             this.regionIn = []
-            this.name = 'Player'
+            this.name = 'Player(you)'
 
 
         }
@@ -284,6 +284,7 @@ window.addEventListener('load', function(){
 
 
         displayText(context, this.score, VPx + (this.size / 2) - (0.2  * this.size), VPy + this.size + 100, "80px Arial", "white")
+        displayText(context, this.name, VPx + (this.size / 2), VPy + this.size - 250, "90px Arial", "white")
 
     }
 }
