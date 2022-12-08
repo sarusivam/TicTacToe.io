@@ -314,6 +314,17 @@ window.addEventListener('load', function(){
                 }
 
             }
+            else {
+                displayText(ctx, 'You died', canvas.width / 2, canvas.height / 2, '800px Arial', 'white')
+
+
+            }
+        } 
+        else {
+            if (this.score > player.score){
+                this.destinationX = player.globalX
+                this.destinationY = player.globalY
+            }
         }
     }
 }
