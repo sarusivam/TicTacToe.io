@@ -284,8 +284,37 @@ window.addEventListener('load', function(){
 
 
         displayText(context, this.score, VPx + (this.size / 2) - (0.2  * this.size), VPy + this.size + 100, "80px Arial", "white")
-        displayText(context, this.name, VPx + (this.size / 2) - (0.5 * (this.name.length * 45)), VPy + this.size - 250, "90px Arial", "white")
+        displayText(context, this.name, VPx + (this.size / 2) - (0.5 * (this.name.length * 45)), VPy -  (0.2 * this.size), "90px Arial", "white")
 
+        if (isTouchingPlayer){
+            if (this.score < player.score){
+                bots.splice(bots.indexOf(this), 1)
+                regions.forEach(region => {
+                    let g = new GameControler()
+                    let isInside = g.isInsideRegion(region, this)
+                    if (isInside){
+                        region.objectsInside.splice(region.objectsInside.indexOf(this), 1)
+                    }
+                })
+                let XP
+                let YP
+                if (Math.random() > 0.5){
+                    XP = -1
+                } else {
+                 
+                    XP = 1
+                }
+                if (Math.random() > 0.5){
+                    YP = -1
+                } else {
+                    YP = 1
+                }
+                for (let i = 0; i < this.score; i++){
+                    disturbuteFood(1, this.globalX + ((Math.random() * (0.1 * (this.size + 20))) * XP), this.globalY + ((Math.random() * (0.1 * (this.size + 20))) * YP))
+                }
+
+            }
+        }
     }
 }
 
@@ -563,7 +592,7 @@ window.addEventListener('load', function(){
                 font = '100px Arial'
                 fontColor = 'red'
             }
-            displayText(ctx, movingEntities[i].name + ' - ' + movingEntities[i].score, 100, 100 + (i * 100), font, fontColor)
+            displayText(ctx, String((i + 1)) + ') ' + movingEntities[i].name + ' - ' + movingEntities[i].score, 100, 100 + (i * 100), font, fontColor)
         }
 
         requestAnimationFrame(animate);
