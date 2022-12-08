@@ -110,8 +110,8 @@ window.addEventListener('load', function(){
             this.image = document.getElementById('spinner')
             this.VPx = window.innerWidth / 2;
             this.VPy = window.innerHeight / 2;
-            this.globalX = Math.random()* (Math.random() * 10000);
-            this.globalY = Math.random()* (Math.random() * 10000);
+            this.globalX = Math.random()* (Math.random() * worldWidth);
+            this.globalY = Math.random()* (Math.random() * worldHeight);
             this.speedX = 0.5;
             this.speedY = 1;
             this.degrees = 1
@@ -411,8 +411,8 @@ window.addEventListener('load', function(){
         context.fillText(text, x, y)
     }
 
-    const worldWidth = 10000;
-    const worldHeight = 10000;
+    const worldWidth = 5000;
+    const worldHeight = 5000;
 
     const input = new InputHandler()
     const player = new Spinner(canvas.width, canvas.height)
@@ -427,18 +427,22 @@ window.addEventListener('load', function(){
         'Einstein',
         'Sapnap',
         'IronMan',
-        'Thor'
+        'Thor',
+        'Thanos',
+        'King',
+        'Coder',
+        'Gamer'
     ]
 
     var bots = []
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 13; i++) {
         bots.push(new Bot(Math.random() * worldWidth, Math.random() * worldHeight, botNames[i]))
     }
 
     var regions = []
-    for (let i = 0; i < 10; i++) {
-        for (let j = 0; j < 10; j++){
-            regions.push(new Region((worldWidth / 10)*i, (worldHeight / 10)*j, worldWidth / 10, worldHeight / 10) )
+    for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++){
+            regions.push(new Region((worldWidth / 5)*i, (worldHeight / 5)*j, worldWidth / 5, worldHeight / 5) )
 
         }
     }
@@ -447,10 +451,10 @@ window.addEventListener('load', function(){
     var viewPortWidth = (player.size / 2) + 50;
     var viewPortHeight = (player.size / 2) + 50;   
 
-    disturbuteFood(30000)
+    disturbuteFood(10000)
 
     setInterval(function(){
-        disturbuteFood(250)
+        disturbuteFood(200)
     }, 10000)
  
     const minimap = new MiniMap(canvas.width - (canvas.width / (0.0025*canvas.width) + 10), canvas.height - (canvas.height / (0.0025*canvas.height) + 10), canvas.width / (0.0025*canvas.width) , canvas.height / (0.0025*canvas.height), player, bots)
