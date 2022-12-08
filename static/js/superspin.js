@@ -253,15 +253,15 @@ window.addEventListener('load', function(){
 
 
             if (diffX > 0){
-                this.globalX -= 0.05;
+                this.globalX -= 0.04;
             } else if (diffX < 0){
-                this.globalX += 0.05;
+                this.globalX += 0.04;
             }
 
             if (diffY > 0){
-                 this.globalY -= 0.05;
+                 this.globalY -= 0.04;
             } else if (diffY < 0){
-                this.globalY += 0.05;
+                this.globalY += 0.04;
             }
             if (Math.round(diffX) == 0 && Math.round(diffY) == 0){
                 this.isMoving = false
