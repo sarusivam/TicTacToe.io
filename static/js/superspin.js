@@ -51,8 +51,6 @@ window.addEventListener('load', function(){
                         let VPy = diffY * canvas.height
     
                         let isTouchingPlayer = false
-
-                        // console.log((player.size / canvas.width) * viewPortWidth)
                         if (imagesTouching(player.globalX, player.globalY, (player.size / canvas.width) * viewPortWidth, (player.size / canvas.height) * viewPortHeight, object.globalX, object.globalY, (object.size / canvas.width) * viewPortWidth, (object.size / canvas.height) * viewPortHeight)){
                             isTouchingPlayer = true
                         }
@@ -451,6 +449,20 @@ window.addEventListener('load', function(){
         context.font = fontSize
         context.fillText(text, x, y)
     }
+    function random_item(items){
+        let randomItem = items[Math.floor(Math.random()*items.length)]
+        return randomItem;
+         
+    }
+    function checkWhetherItemInList(items, item){
+        let isItemInList = false
+        items.forEach(i => {
+            if (i.name == item){
+                isItemInList = true
+            }
+        })
+        return isItemInList
+    }
 
     const worldWidth = 5000;
     const worldHeight = 5000;
@@ -472,14 +484,31 @@ window.addEventListener('load', function(){
         'Thanos',
         'King',
         'Coder',
-        'Gamer'
+        'Gamer',
+        'Friendly',
+        'Bubble',
+        'Alpha',
+        'Miner',
+        'Axeb',
+        'Cloud',
+        'Magnet',
+        'ChatterBot',
+        'Eater'
     ]
 
     var bots = []
-    for (let i = 0; i < 13; i++) {
-        bots.push(new Bot(Math.random() * worldWidth, Math.random() * worldHeight, botNames[i]))
-    }
+    function distrubuteBots(num){
+        for (let i = 0; i < num; i++) {
 
+            let randomItem = random_item(botNames)
+
+            while (checkWhetherItemInList(bots, randomItem)){
+                randomItem = random_item(botNames)
+            }
+            
+            bots.push(new Bot(Math.random() * worldWidth, Math.random() * worldHeight, randomItem))
+        }
+    }
     var regions = []
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++){
@@ -489,15 +518,23 @@ window.addEventListener('load', function(){
     }
 
 
+
     var viewPortWidth = (player.size / 2) + 50;
     var viewPortHeight = (player.size / 2) + 50;   
 
     disturbuteFood(10000)
-
+    distrubuteBots(13)
     setInterval(function(){
         disturbuteFood(200)
     }, 10000)
- 
+    this.setInterval(function(){
+        if (bots.length < 24){
+            console.log(true)
+            distrubuteBots(1)
+        }
+
+    }, 50000)
+
     const minimap = new MiniMap(canvas.width - (canvas.width / (0.0025*canvas.width) + 10), canvas.height - (canvas.height / (0.0025*canvas.height) + 10), canvas.width / (0.0025*canvas.width) , canvas.height / (0.0025*canvas.height), player, bots)
     const spinnerGameControler = new GameControler([player], regions)
 
@@ -595,16 +632,22 @@ window.addEventListener('load', function(){
         })
 
         movingEntities =  movingEntities.reverse()
-
-        for (let i=0; i < 10; i++){
+        let endNum
+        if (10 < movingEntities.length){
+            endNum = 10
+        } else {
+            endNum = movingEntities.length
+        }
+        for (let i=0; i < endNum; i++){
             let font = '80px Arial'
             let fontColor = 'white'
             if (i == 0){
                 font = '100px Arial'
                 fontColor = 'red'
             }
-            displayText(ctx, String((i + 1)) + ') ' + movingEntities[i].name + ' - ' + movingEntities[i].score, 100, 100 + (i * 100), font, fontColor)
+            displayText(ctx, String((i + 1)) + ') ' + movingEntities[   i].name + ' - ' + movingEntities[i].score, 100, 100 + (i * 100), font, fontColor)
         }
+        displayText(ctx, 'Players : ' + String(Number(bots.length) + Number(1)) , 100, canvas.height - 100, '80px Arial', 'green')
 
         requestAnimationFrame(animate);
     }

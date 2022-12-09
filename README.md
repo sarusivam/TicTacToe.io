@@ -22,18 +22,17 @@ The main **objectives** are:
 
 ## Version
 
-Alpha 0.1.9 XP
+Alpha 0.2
 
 ## Future updates
 
 ### Next update
 
-**Alpha 0.2** is the next update. The next update :
+**Alpha 0.2 XP** is the next update. The next update :
 
 * Adds new features such as :
-    * killing other bots
-    * Better mini map
     * World Border
+    * Better contols
 
 #### Code
 
