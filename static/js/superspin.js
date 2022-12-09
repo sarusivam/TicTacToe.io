@@ -39,9 +39,9 @@ window.addEventListener('load', function(){
         getElementsInsideObjectRegion(player){
             player.regionIn.forEach(objectRegion => {
                 objectRegion.objectsInside.forEach(object =>{
-                    if (object.globalX < (player.globalX + (viewPortWidth / 2)) && 
+                    if (object.globalX - ((object.size / canvas.width) * viewPortWidth) < (player.globalX + (viewPortWidth / 2)) && 
                         object.globalX > (player.globalX - (viewPortWidth / 2)) &&
-                        object.globalY < (player.globalY + (viewPortHeight / 2)) &&
+                        object.globalY - ((object.size / canvas.height) * viewPortHeight) < (player.globalY + (viewPortHeight / 2)) &&
                         object.globalY > (player.globalY - (viewPortHeight / 2))){
 
                         let diffX = (((player.globalX + (viewPortWidth / 2)) - object.globalX) / viewPortWidth)
@@ -51,9 +51,19 @@ window.addEventListener('load', function(){
                         let VPy = diffY * canvas.height
     
                         let isTouchingPlayer = false
-                        if (imagesTouching(player.globalX, player.globalY, (player.size / canvas.width) * viewPortWidth, (player.size / canvas.height) * viewPortHeight, object.globalX, object.globalY, (object.size / canvas.width) * viewPortWidth, (object.size / canvas.height) * viewPortHeight)){
+                        if (imagesTouching(object.globalX, object.globalY, (object.size / canvas.width) * viewPortWidth, (object.size / canvas.height) * viewPortHeight, player.globalX, player.globalY, (player.size / canvas.width) * viewPortWidth, (player.size / canvas.height) * viewPortHeight)){
                             isTouchingPlayer = true
                         }
+                        else {
+                            if (player.constructor.name == 'Bot'){
+                                if (!player.isMoving){
+                                    player.destinationX = Math.random() * worldWidth
+                                    player.destinationY = Math.random() * worldHeight
+                                }
+
+                            player.move()
+                            }
+                        }                    
     
 
                         object.draw(ctx, player, VPx, VPy, isTouchingPlayer)
@@ -251,15 +261,15 @@ window.addEventListener('load', function(){
 
 
             if (diffX > 0){
-                this.globalX -= 0.04;
+                this.globalX -= 0.005;
             } else if (diffX < 0){
-                this.globalX += 0.04;
+                this.globalX += 0.005;
             }
 
             if (diffY > 0){
-                 this.globalY -= 0.04;
+                 this.globalY -= 0.005;
             } else if (diffY < 0){
-                this.globalY += 0.04;
+                this.globalY += 0.005;
             }
             if (Math.round(diffX) == 0 && Math.round(diffY) == 0){
                 this.isMoving = false
@@ -268,8 +278,16 @@ window.addEventListener('load', function(){
     }
 
     increaseSize(){
+        if (this.size < 1200){
+            this.size += 1
+
+        if (this.degreeIncrease < 30){
+        this.degreeIncrease += 0.05;
+        }
+    } else {
+        this.size += 0.005
+    }
         this.score += 1
-        this.size += 1
 
     }
 
@@ -296,21 +314,27 @@ window.addEventListener('load', function(){
                 })
                 let XP
                 let YP
-                if (Math.random() > 0.5){
-                    XP = -1
-                } else {
-                 
-                    XP = 1
+                if (player.constructor.name == 'Spinner'){
+                    if (Math.random() > 0.5){
+                        XP = -1
+                    } else {
+                    
+                        XP = 1
+                    }
+                    if (Math.random() > 0.5){
+                        YP = -1
+                    } else {
+                        YP = 1
+                    }
+                    for (let i = 0; i < this.score; i++){
+                        disturbuteFood(1, this.globalX + ((Math.random() * (0.2 * (this.size + 20))) * XP), this.globalY + ((Math.random() * (0.2 * (this.size + 20))) * YP))
+                    }
+                } 
+                else {
+                    for (let i = 0; i < this.score; i++){
+                        player.increaseSize()
                 }
-                if (Math.random() > 0.5){
-                    YP = -1
-                } else {
-                    YP = 1
                 }
-                for (let i = 0; i < this.score; i++){
-                    disturbuteFood(1, this.globalX + ((Math.random() * (0.1 * (this.size + 20))) * XP), this.globalY + ((Math.random() * (0.1 * (this.size + 20))) * YP))
-                }
-
             }
             else {
                 displayText(ctx, 'You died', canvas.width / 2, canvas.height / 2, '800px Arial', 'white')
@@ -510,9 +534,9 @@ window.addEventListener('load', function(){
         }
     }
     var regions = []
-    for (let i = 0; i < 5; i++) {
-        for (let j = 0; j < 5; j++){
-            regions.push(new Region((worldWidth / 5)*i, (worldHeight / 5)*j, worldWidth / 5, worldHeight / 5) )
+    for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 2; j++){
+            regions.push(new Region((worldWidth / 2)*i, (worldHeight / 2)*j, worldWidth / 2, worldHeight / 2) )
 
         }
     }
@@ -522,7 +546,7 @@ window.addEventListener('load', function(){
     var viewPortWidth = (player.size / 2) + 50;
     var viewPortHeight = (player.size / 2) + 50;   
 
-    disturbuteFood(10000)
+    disturbuteFood(30000)
     distrubuteBots(13)
     setInterval(function(){
         disturbuteFood(200)
@@ -533,7 +557,7 @@ window.addEventListener('load', function(){
             distrubuteBots(1)
         }
 
-    }, 50000)
+    }, 10000)
 
     const minimap = new MiniMap(canvas.width - (canvas.width / (0.0025*canvas.width) + 10), canvas.height - (canvas.height / (0.0025*canvas.height) + 10), canvas.width / (0.0025*canvas.width) , canvas.height / (0.0025*canvas.height), player, bots)
     const spinnerGameControler = new GameControler([player], regions)
@@ -597,13 +621,6 @@ window.addEventListener('load', function(){
                         region.objectsInside.splice(index, 1);
                     }
                 }
-                if (!bot.isMoving){
-                    bot.destinationX = Math.random() * worldWidth
-                    bot.destinationY = Math.random() * worldHeight
-                    bot.move()
-                } else {
-                    bot.move()
-                }
                 spinnerGameControler.getElementsInsideObjectRegion(bot)
             }) 
         })
@@ -617,8 +634,8 @@ window.addEventListener('load', function(){
         
         minimap.render(ctx)
   
-        viewPortWidth = (player.size / 2) + 50;
-        viewPortHeight = (player.size / 2) + 50;   
+        viewPortWidth = (player.size / 2) + 30;
+        viewPortHeight = (player.size / 2) + 30;   
         
         let movingEntities = bots.concat([player])
         movinEntities = movingEntities.sort(function(a, b){
@@ -645,7 +662,7 @@ window.addEventListener('load', function(){
                 font = '100px Arial'
                 fontColor = 'red'
             }
-            displayText(ctx, String((i + 1)) + ') ' + movingEntities[   i].name + ' - ' + movingEntities[i].score, 100, 100 + (i * 100), font, fontColor)
+            displayText(ctx, String((i + 1)) + ') ' + movingEntities[i].name + ' - ' + movingEntities[i].score, 100, 100 + (i * 100), font, fontColor)
         }
         displayText(ctx, 'Players : ' + String(Number(bots.length) + Number(1)) , 100, canvas.height - 100, '80px Arial', 'green')
 
