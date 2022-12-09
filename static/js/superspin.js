@@ -51,6 +51,7 @@ window.addEventListener('load', function(){
                         let VPy = diffY * canvas.height
     
                         let isTouchingPlayer = false
+                        
                         if (imagesTouching(object.globalX, object.globalY, (object.size / canvas.width) * viewPortWidth, (object.size / canvas.height) * viewPortHeight, player.globalX, player.globalY, (player.size / canvas.width) * viewPortWidth, (player.size / canvas.height) * viewPortHeight)){
                             isTouchingPlayer = true
                         }
@@ -61,7 +62,7 @@ window.addEventListener('load', function(){
                                     player.destinationY = Math.random() * worldHeight
                                 }
 
-                            player.move()
+
                             }
                         }                    
     
@@ -112,9 +113,9 @@ window.addEventListener('load', function(){
 
     class Spinner{
             constructor(gameWidth, gameHeight){
-                this.gameWidth = gameWidth;
+            this.gameWidth = gameWidth;
             this.gameHeight = gameHeight;
-            this.size = 200 
+            this.size = 200
             this.image = document.getElementById('spinner')
             this.VPx = window.innerWidth / 2;
             this.VPy = window.innerHeight / 2;
@@ -250,6 +251,8 @@ window.addEventListener('load', function(){
             this.isMoving = false
             this.regionIn = []
             this.name = name
+            this.degreeIncrease = 0.1;
+            this.degrees = 1
 
         }
 
@@ -261,15 +264,15 @@ window.addEventListener('load', function(){
 
 
             if (diffX > 0){
-                this.globalX -= 0.005;
+                this.globalX -= 0.15;
             } else if (diffX < 0){
-                this.globalX += 0.005;
+                this.globalX += 0.15;
             }
 
             if (diffY > 0){
-                 this.globalY -= 0.005;
+                 this.globalY -= 0.15;
             } else if (diffY < 0){
-                this.globalY += 0.005;
+                this.globalY += 0.15;
             }
             if (Math.round(diffX) == 0 && Math.round(diffY) == 0){
                 this.isMoving = false
@@ -278,13 +281,14 @@ window.addEventListener('load', function(){
     }
 
     increaseSize(){
-        if (this.size < 1200){
+    if (this.size < 1200){
             this.size += 1
 
         if (this.degreeIncrease < 30){
-        this.degreeIncrease += 0.05;
+            this.degreeIncrease += 0.05;
         }
-    } else {
+    } 
+    else {
         this.size += 0.005
     }
         this.score += 1
@@ -337,8 +341,17 @@ window.addEventListener('load', function(){
                 }
             }
             else {
-                displayText(ctx, 'You died', canvas.width / 2, canvas.height / 2, '800px Arial', 'white')
-
+                if (player.constructor.name == 'Spinner'){
+                    player.globalX = Math.random() *worldWidth
+                    player.globalY = Math.random() * worldHeight
+                    player.size = 200
+                    player.score = 0
+                    player.degreeIncrease = 0.1
+                    player.degrees = 1
+                    for (let i = 0; i < player.score; i++){
+                        this.increaseSize()
+                    }
+                }
 
             }
         } 
@@ -463,8 +476,8 @@ window.addEventListener('load', function(){
 
 
     function imagesTouching(x1, y1, w1, h1, x2, y2, w2, h2) {
-        if (x1 >= x2+w2 || x1+w1 <= x2) return false;   // too far to the side
-        if (y1 >= y2+h2 || y1+h1 <= y2) return false; // too far above/below
+        if (x1-(w1 / 2) >= x2+(w2 / 2) || x1+(w1 / 2) <= x2- (w2 / 2)) return false;   // too far to the side
+        if (y1 - (h1 / 2) >= y2+h2 || y1+h1 <= y2 - (h2 / 2)) return false; // too far above/below
         return true;                                                    // otherwise, overlap   
         }
 
@@ -552,7 +565,7 @@ window.addEventListener('load', function(){
         disturbuteFood(200)
     }, 10000)
     this.setInterval(function(){
-        if (bots.length < 24){
+        if (bots.length < 23){
             console.log(true)
             distrubuteBots(1)
         }
@@ -621,6 +634,7 @@ window.addEventListener('load', function(){
                         region.objectsInside.splice(index, 1);
                     }
                 }
+                bot.move()
                 spinnerGameControler.getElementsInsideObjectRegion(bot)
             }) 
         })
@@ -665,6 +679,10 @@ window.addEventListener('load', function(){
             displayText(ctx, String((i + 1)) + ') ' + movingEntities[i].name + ' - ' + movingEntities[i].score, 100, 100 + (i * 100), font, fontColor)
         }
         displayText(ctx, 'Players : ' + String(Number(bots.length) + Number(1)) , 100, canvas.height - 100, '80px Arial', 'green')
+        let rankLabelColor = 'white';
+        if (movingEntities.indexOf(player) == 0){ rankLabelColor = 'red' }
+        else if (movingEntities.indexOf(player) <=  endNum - 1) { rankLabelColor = 'green' }
+        displayText(ctx, 'Rank : ' + (movingEntities.indexOf(player) + 1), canvas.width / 2, 200, '100px Arial', rankLabelColor)
 
         requestAnimationFrame(animate);
     }
