@@ -55,16 +55,10 @@ window.addEventListener('load', function(){
                         if (imagesTouching(object.globalX, object.globalY, (object.size / canvas.width) * viewPortWidth, (object.size / canvas.height) * viewPortHeight, player.globalX, player.globalY, (player.size / canvas.width) * viewPortWidth, (player.size / canvas.height) * viewPortHeight)){
                             isTouchingPlayer = true
                         }
-                        else {
-                            if (player.constructor.name == 'Bot'){
-                                if (!player.isMoving){
-                                    player.destinationX = Math.random() * worldWidth
-                                    player.destinationY = Math.random() * worldHeight
-                                }
+                        // else {
+                        //     if (player.constructor.name == 'Bot'){
 
-
-                            }
-                        }                    
+                        // }                    
     
 
                         object.draw(ctx, player, VPx, VPy, isTouchingPlayer)
@@ -115,7 +109,7 @@ window.addEventListener('load', function(){
             constructor(gameWidth, gameHeight){
             this.gameWidth = gameWidth;
             this.gameHeight = gameHeight;
-            this.size = 200
+            this.size = 50
             this.image = document.getElementById('spinner')
             this.VPx = window.innerWidth / 2;
             this.VPy = window.innerHeight / 2;
@@ -199,8 +193,8 @@ window.addEventListener('load', function(){
 
 
             if (this.isSprinting  && this.score > 0){
-                this.speedX = 1;
-                this.speedY = 2;
+                this.speedX = 0.67;
+                this.speedY = 1.3;
 
                 if (this.countInterval >= this.sprintInterval){
                     this.score -= 1
@@ -215,8 +209,8 @@ window.addEventListener('load', function(){
 
                 }
             } else {
-                this.speedX = 0.5;
-                this.speedY = 1;                     
+                this.speedX = 0.33;
+                this.speedY = 0.67;                     
             }       
 
 
@@ -225,14 +219,12 @@ window.addEventListener('load', function(){
 
 
         increaseSize(){
-            if (this.size < 1200){
-                this.size += 1
+            if (this.size < 1000.0){
+                this.size += 0.5
 
             if (this.degreeIncrease < 30){
             this.degreeIncrease += 0.05;
             }
-        } else {
-            this.size += 0.005
         }
             this.score += 1
         }   
@@ -243,7 +235,7 @@ window.addEventListener('load', function(){
         constructor(globalX, globalY, name){
             this.globalX = globalX
             this.globalY = globalY
-            this.size = 200
+            this.size = 50
             this.score = 0
             this.image = document.getElementById('spinner')
             this.destinationX = 0
@@ -264,15 +256,15 @@ window.addEventListener('load', function(){
 
 
             if (diffX > 0){
-                this.globalX -= 0.15;
+                this.globalX -= 0.2;
             } else if (diffX < 0){
-                this.globalX += 0.15;
+                this.globalX += 0.2;
             }
 
             if (diffY > 0){
-                 this.globalY -= 0.15;
+                 this.globalY -= 0.2;
             } else if (diffY < 0){
-                this.globalY += 0.15;
+                this.globalY += 0.2;
             }
             if (Math.round(diffX) == 0 && Math.round(diffY) == 0){
                 this.isMoving = false
@@ -281,16 +273,13 @@ window.addEventListener('load', function(){
     }
 
     increaseSize(){
-    if (this.size < 1200){
-            this.size += 1
+    if (this.size < 1000.0){
+            this.size += 0.5
 
         if (this.degreeIncrease < 30){
             this.degreeIncrease += 0.05;
         }
     } 
-    else {
-        this.size += 0.005
-    }
         this.score += 1
 
     }
@@ -303,8 +292,8 @@ window.addEventListener('load', function(){
         context.drawImage(this.image, VPx,  VPy, this.size, this.size)
 
 
-        displayText(context, this.score, VPx + (this.size / 2) - (0.2  * this.size), VPy + this.size + 100, "80px Arial", "white")
-        displayText(context, this.name, VPx + (this.size / 2) - (0.5 * (this.name.length * 45)), VPy -  (0.2 * this.size), "90px Arial", "white")
+        displayText(context, this.score, VPx + (this.size / 2) - (0.05  * this.size), VPy + this.size + 25, "20px Arial", "white")
+        displayText(context, this.name, VPx + (this.size / 2) - (0.125 * (this.name.length * 45)), VPy -  (0.125 * this.size), "23px Arial", "white")
 
         if (isTouchingPlayer){
             if (this.score < player.score){
@@ -344,7 +333,7 @@ window.addEventListener('load', function(){
                 if (player.constructor.name == 'Spinner'){
                     player.globalX = Math.random() *worldWidth
                     player.globalY = Math.random() * worldHeight
-                    player.size = 200
+                    player.size = 50
                     player.score = 0
                     player.degreeIncrease = 0.1
                     player.degrees = 1
@@ -369,7 +358,7 @@ window.addEventListener('load', function(){
             this.gameWidth = gameWidth;
             this.gameHeight = gameHeight;
             this.image = document.getElementById("burger");
-            this.size = 100
+            this.size = 50
             this.globalX  = globalX;
             this.globalY = globalY;
 
@@ -427,7 +416,7 @@ window.addEventListener('load', function(){
                     context.fillStyle = "#FF0000"
                 }
 
-                context.arc(circleX, circleY, 10, 0, 2 * Math.PI)
+                context.arc(circleX, circleY, 3, 0, 2 * Math.PI)
                 context.fill()        
                 context.stroke()
             })
@@ -477,7 +466,7 @@ window.addEventListener('load', function(){
 
     function imagesTouching(x1, y1, w1, h1, x2, y2, w2, h2) {
         if (x1-(w1 / 2) >= x2+(w2 / 2) || x1+(w1 / 2) <= x2- (w2 / 2)) return false;   // too far to the side
-        if (y1 - (h1 / 2) >= y2+h2 || y1+h1 <= y2 - (h2 / 2)) return false; // too far above/below
+        if (y1 - (h1 / 2) >= y2+(h2 / 2) || y1+(h1 / 2) <= y2 - (h2 / 2)) return false; // too far above/below
         return true;                                                    // otherwise, overlap   
         }
 
@@ -501,8 +490,8 @@ window.addEventListener('load', function(){
         return isItemInList
     }
 
-    const worldWidth = 5000;
-    const worldHeight = 5000;
+    const worldWidth = 4000;
+    const worldHeight = 4000;
 
     const input = new InputHandler()
     const player = new Spinner(canvas.width, canvas.height)
@@ -559,10 +548,10 @@ window.addEventListener('load', function(){
     var viewPortWidth = (player.size / 2) + 50;
     var viewPortHeight = (player.size / 2) + 50;   
 
-    disturbuteFood(30000)
+    disturbuteFood(40000)
     distrubuteBots(13)
     setInterval(function(){
-        disturbuteFood(200)
+        disturbuteFood(300)
     }, 10000)
     this.setInterval(function(){
         if (bots.length < 23){
@@ -586,10 +575,10 @@ window.addEventListener('load', function(){
         minimap.update(
             player,
             bots,
-            canvas.width - (canvas.width / (0.0025*canvas.width) + 10), 
-            canvas.height - (canvas.height / (0.0025*canvas.height) + 10), 
-            canvas.width / (0.0025*canvas.width), 
-            canvas.height / (0.0025*canvas.height)
+            canvas.width - (canvas.width / (0.01*canvas.width) + 3), 
+            canvas.height - (canvas.height / (0.01*canvas.height) + 3), 
+            (canvas.width / 4) / (0.0025*canvas.width), 
+            (canvas.height / 4) / (0.0025*canvas.height)
  
         )
 
@@ -634,6 +623,10 @@ window.addEventListener('load', function(){
                         region.objectsInside.splice(index, 1);
                     }
                 }
+                if (!bot.isMoving){
+                    bot.destinationX = Math.random() * worldWidth
+                    bot.destinationY = Math.random() * worldHeight
+                }
                 bot.move()
                 spinnerGameControler.getElementsInsideObjectRegion(bot)
             }) 
@@ -642,7 +635,7 @@ window.addEventListener('load', function(){
         player.draw(ctx);
         player.update(input);
 
-        displayText(ctx, player.score, player.x + (player.size / 2) - (0.2  * player.size), player.y + player.size + 100, "80px Arial", "white") 
+        displayText(ctx, player.score, player.x + (player.size / 2.5) - (0.05  * player.size), player.y + player.size + 25, "20px Arial", "white") 
         
         spinnerGameControler.getElementsInsideObjectRegion(player)
         
@@ -670,19 +663,19 @@ window.addEventListener('load', function(){
             endNum = movingEntities.length
         }
         for (let i=0; i < endNum; i++){
-            let font = '80px Arial'
+            let font = '20px Arial'
             let fontColor = 'white'
             if (i == 0){
-                font = '100px Arial'
+                font = '25px Arial'
                 fontColor = 'red'
             }
-            displayText(ctx, String((i + 1)) + ') ' + movingEntities[i].name + ' - ' + movingEntities[i].score, 100, 100 + (i * 100), font, fontColor)
+            displayText(ctx, String((i + 1)) + ') ' + movingEntities[i].name + ' - ' + movingEntities[i].score, 25, 25 + (i * 25), font, fontColor)
         }
-        displayText(ctx, 'Players : ' + String(Number(bots.length) + Number(1)) , 100, canvas.height - 100, '80px Arial', 'green')
+        displayText(ctx, 'Players : ' + String(Number(bots.length) + Number(1)) , 25, canvas.height - 25, '20px Arial', 'green')
         let rankLabelColor = 'white';
         if (movingEntities.indexOf(player) == 0){ rankLabelColor = 'red' }
         else if (movingEntities.indexOf(player) <=  endNum - 1) { rankLabelColor = 'green' }
-        displayText(ctx, 'Rank : ' + (movingEntities.indexOf(player) + 1), canvas.width / 2, 200, '100px Arial', rankLabelColor)
+        displayText(ctx, 'Rank : ' + (movingEntities.indexOf(player) + 1), canvas.width / 2, 50, '25px Arial', rankLabelColor)
 
         requestAnimationFrame(animate);
     }
