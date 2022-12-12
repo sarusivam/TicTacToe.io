@@ -198,7 +198,7 @@ window.addEventListener('load', function(){
 
                 if (this.countInterval >= this.sprintInterval){
                     this.score -= 1
-                    this.size -= 1
+                    this.size -= 0.5
 
                     disturbuteFood(1, (this.globalX + ((Math.random() * (0.1 * (this.size + 20)) * (mouseXDiff / Math.abs(mouseXDiff))))), (this.globalY + ((Math.random() * (0.1 * (this.size + 20)) *  (mouseYDiff / Math.abs(mouseYDiff))))))
 
@@ -326,20 +326,23 @@ window.addEventListener('load', function(){
                 else {
                     for (let i = 0; i < this.score; i++){
                         player.increaseSize()
-                }
+                    }
                 }
             }
             else {
                 if (player.constructor.name == 'Spinner'){
+                    for (let i = 0; i < player.score; i++){
+                        console.log(true, player.constructor.name)
+                        this.increaseSize()
+                    }
                     player.globalX = Math.random() *worldWidth
                     player.globalY = Math.random() * worldHeight
                     player.size = 50
                     player.score = 0
                     player.degreeIncrease = 0.1
                     player.degrees = 1
-                    for (let i = 0; i < player.score; i++){
-                        this.increaseSize()
-                    }
+
+                
                 }
 
             }
@@ -555,7 +558,7 @@ window.addEventListener('load', function(){
     }, 10000)
     this.setInterval(function(){
         if (bots.length < 23){
-            console.log(true)
+
             distrubuteBots(1)
         }
 
