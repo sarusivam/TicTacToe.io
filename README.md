@@ -1,6 +1,6 @@
-# Spinner.io
+# gear.io
 
-This game is a remix of the game : <a href='https://superspin.io'>SuperSpin</a>
+This is a very addictive game where you are a gear and have to kill other smaller gear in order to get to leaderboard
 
 ## Link to project
 
