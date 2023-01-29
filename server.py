@@ -66,7 +66,7 @@ async def new_client_connected(client_scoket, path):
     
                 break
         else:
-            games.append(Game([client_scoket], []))
+            games.append(Game([client_scoket], ['', '', '', '', '', '', '', '', '']))
     while True:
         try:
             new_message = await client_scoket.recv()
@@ -86,6 +86,7 @@ async def new_client_connected(client_scoket, path):
                 if client_scoket in game.players:
                     other_player = game.players[0] if client_scoket == game.players[1] else game.players[1]
                     if client_scoket == game.playerX:
+                        print(games, games[0].board, games[0].players, game, message)
                         game.board[int(message)] = 'X'
                     else:
                         game.board[int(message)] = 'O'
