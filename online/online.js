@@ -39,13 +39,28 @@ document.addEventListener('DOMContentLoaded', function(){
             b.hidden = false
         }
         else if (message.data == 'Play'){
+            let timer = 0
             turn.innerHTML = 'Your turn'
             waiting = false
             tiles.forEach( (tile, index) => {
                 tile.addEventListener('click', () => userAction(tile, index));
             });
+            const addTimer = setInterval(function() {
+                if (!waiting){
+                    timer++
+                    turn.innerHTML = 'Your turn ' + (60 - timer)
+                    if (timer > 59){
+                        websocketClient.send('TimeUp')
+                    } 
+                } else {
+                    timer = 0
+                }
+
+            }, 1000)
+                
         }
         else if (message.data == 'Wait'){
+        
             turn.innerHTML = 'Opponents turn'
             waiting = true
         }
