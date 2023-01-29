@@ -159,6 +159,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if (currentPlayer == 'O' && isGameActive    ){
             waiting = true
             var move_index = bot.decideMove()
+
             tiles.forEach((tile, index) => {
                 if (move_index == index){
                     move(tile, index)
@@ -172,7 +173,13 @@ window.addEventListener('DOMContentLoaded', () => {
         playerDisplay.innerText = currentPlayer;
         playerDisplay.classList.add(`player${currentPlayer}`);
     }
-
+    function sleep(milliseconds) {
+        const date = Date.now();
+        let currentDate = null;
+        do {
+          currentDate = Date.now();
+        } while (currentDate - date < milliseconds);
+      }
     const userAction = (tile, index) => {
         if(isValidAction(tile) && isGameActive && !waiting) {
             tile.innerText = currentPlayer;
