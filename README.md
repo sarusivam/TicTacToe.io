@@ -1,52 +1,42 @@
-# gear.io
+# TicTacToe.io
 
-This is a very addictive game where you are a gear and have to kill other smaller gear in order to get to leaderboard
+This is the simple and classic tic tyac toe game made 
 
 ## Link to project
 
-Go to your browser and type <a href='https://spinner.io'>spinner.io</a>
+Go to your browser and type <a href='https://tictactoe.io'>tictactoe.io</a>
 
-## Objective
+## Instructions
 
-The main **objectives** are:
+### How to play
 
-* To get bigger by eating as much as food as possible
+You can start playing by going to the website or playing it on replit.
 
-* To kill smaller players and eat their food
+#### Objective Of Tic Tac Toe
+The main **objectives** are to :
 
-## Controls
+* Get three of your symbols(which may be **X** or **O**) placed *concecutive* in any possible way such as diagonaly, left to right, right to left, bottom to top or top  to bottom
 
-* It can be fully controlled by mouse
+* Not allow the enemy to place three of their symbols *concecutive* in any way possible.
 
-* Right click to boost
 
-## Version
+### Online Play
 
-Alpha 0.2
+To play online click ```Play with random online player``` and you will be assigned to a game with a random online player.
 
-## Future updates
+### Offline play
 
-### Next update
+To play offline click ```Play with friend``` and start playing
 
-**Alpha 0.2 XP** is the next update. The next update :
+### Bot Play
 
-* Adds new features such as :
-    * World Border
-    * Better contols
-
-#### Code
-
-* Code will be changesd to fully-object-oriented with proper design and classes *in 1.2.2 XP*
-
-### Other updates
-
-* Multi-player
+The bot has a difficulty of **medium** and to start playing with the bot press the button ```Play with bot```
 
 ## Compantabilitly
 
 Device | Check
 -------|-------
-Mobile | false
-Tablet | false
-Laptop | *WIP*
-PC     | *WIP* 
+Mobile | true
+Tablet | true
+Laptop | true
+PC     | true 

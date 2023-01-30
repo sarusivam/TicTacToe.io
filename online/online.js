@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function(){
             const addTimer = setInterval(function() {
                 if (!waiting){
                     timer++
-                    turn.innerHTML = 'Your turn ' + (60 - timer)
+                    turn.innerHTML = 'Your turn (Time left : ' + (60 - timer) + 'seconds )' 
                     if (timer > 59){
                         websocketClient.send('TimeUp')
                     } 
