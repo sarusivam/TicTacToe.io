@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function(){
-    const websocketClient = new WebSocket('https://' + document.location.hostname + '/ws')
+    const websocketClient = new WebSocket('wss://' + document.location.hostname + '/ws')
     const loader = document.getElementById('spinner')
     const loaderText = document.getElementById('spinner text')
     const b = document.getElementById('container')
