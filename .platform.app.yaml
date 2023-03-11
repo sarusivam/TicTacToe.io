@@ -21,14 +21,6 @@ hooks:
 
 # The size of the persistent disk of the application (in MB).
 disk: 1024
-# The relationships of the application with services or other applications.
-#
-# The left-hand side is the name of the relationship as it will be exposed
-# to the application in the PLATFORM_RELATIONSHIPS variable. The right-hand
-# side is in the form `<service name>:<endpoint name>`.
-relationships:
-    database: "db:mysql"
-    rediscache: "cache:redis"
 
 # The configuration of app when it is exposed to the web.
 web:
@@ -40,4 +32,4 @@ source:
     auto-update:
       command: |
         curl -fsS https://raw.githubusercontent.com/platformsh/source-operations/main/setup.sh | { bash /dev/fd/3 sop-autoupdate; } 3<&0
-    
+
