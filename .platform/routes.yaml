@@ -5,3 +5,5 @@ https://{default}/:
 https://{default}/ws:
   type: upstream
   upstream: "app:http"
+  cache:
+    enabled: false
