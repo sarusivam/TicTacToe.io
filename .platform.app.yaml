@@ -24,3 +24,9 @@ web:
       '/':
         root: 'startPage'
         index: ['startPage.html']
+      '/2player':
+        root: '2player'
+      '/online':
+        root: 'online'
+      '/bot':
+        root: 'bot'

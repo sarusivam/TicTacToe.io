@@ -116,6 +116,7 @@ async def new_client_connected(client_scoket, path):
                     other_player = game.players[0] if client_scoket == game.players[1] else game.players[1]
                     await send_message('Lose', [client_scoket])
                     await send_message('Win', [other_player])
+
 async def start_server():
     print('SERVER STARTED')
     await websockets.serve(new_client_connected, 'localhost', 12345)
