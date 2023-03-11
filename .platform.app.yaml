@@ -30,3 +30,5 @@ web:
         root: 'online'
       '/bot':
         root: 'bot'
+      '/ws':
+        passthru: true

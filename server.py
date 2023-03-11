@@ -119,7 +119,7 @@ async def new_client_connected(client_scoket, path):
 
 async def start_server():
     print('SERVER STARTED')
-    await websockets.serve(new_client_connected, 'localhost', 12345)
+    await websockets.serve(new_client_connected, '0.0.0.0', 443)
 
 if __name__ == '__main__':
     event_loop = asyncio.get_event_loop()
