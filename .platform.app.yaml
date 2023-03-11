@@ -12,6 +12,10 @@ type: "python:3.8"
 # The size of the persistent disk of the application (in MB).
 disk: 1024
 
+hooks:
+  build: |
+    pip install -r requirements.txt
+
 # The configuration of app when it is exposed to the web.
 web:
     commands:
