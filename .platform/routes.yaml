@@ -1,3 +1,7 @@
+https://{default}/:
+  type: upstream
+  upstream: "app:http"
+
 https://{default}/ws:
   type: upstream
   upstream: "app:http"
