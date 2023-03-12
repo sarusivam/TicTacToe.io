@@ -64,18 +64,23 @@ window.addEventListener('DOMContentLoaded', () => {
                     
                 }
             })
+
             return index
 
         }
 
         checkWhetherNeedToChangeObjective(){
+            let shouldChange = false;
             this.objective.forEach(number => {
                 if (board[number] == 'X'){
-                    return true
+
+                    shouldChange = true
                 }
             })
-
-            return false
+            if (!board.includes('')){
+                shouldChange = false    
+            }
+            return shouldChange
         }
     }
 
@@ -117,6 +122,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+
     if (roundWon) {
         announce(currentPlayer === 'X' ? PLAYERX_WON : PLAYERO_WON);
         isGameActive = false;
@@ -150,12 +156,18 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateBoard =  (index) => {
+
         board[index] = currentPlayer;
+
     }
 
     const changePlayer = () => {
+
         playerDisplay.classList.remove(`player${currentPlayer}`);
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+
+        playerDisplay.innerText = currentPlayer;
+        playerDisplay.classList.add(`player${currentPlayer}`);
         if (currentPlayer == 'O' && isGameActive    ){
             waiting = true
             var move_index = bot.decideMove()
@@ -172,8 +184,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
             waiting = false
         }
-        playerDisplay.innerText = currentPlayer;
-        playerDisplay.classList.add(`player${currentPlayer}`);
     }
     function sleep(milliseconds) {
         const date = Date.now();
@@ -186,12 +196,17 @@ window.addEventListener('DOMContentLoaded', () => {
         if(isValidAction(tile) && isGameActive && !waiting) {
             tile.innerText = currentPlayer;
             tile.classList.add(`player${currentPlayer}`);
+            
+
             updateBoard(index);
             handleResultValidation();
-            sleep(1000)
+
+
 
 
             changePlayer();
+
+
         }
     }
     
