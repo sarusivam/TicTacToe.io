@@ -26,6 +26,7 @@ window.addEventListener('DOMContentLoaded', () => {
             this.objective = getRandomItem(winningConditions)
         }
         decideMove(){
+            
             for (let winningCondition in winningConditions){
                 winningCondition = winningConditions[winningCondition]
                 const a = board[winningCondition[0]];
@@ -63,7 +64,6 @@ window.addEventListener('DOMContentLoaded', () => {
                     
                 }
             })
-            console.log('DUCK', index   )
             return index
 
         }
@@ -162,12 +162,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
             tiles.forEach((tile, index) => {
                 if (move_index == index){
+
                     move(tile, index)
                     
                 }
             });
         }
         else{
+
             waiting = false
         }
         playerDisplay.innerText = currentPlayer;
@@ -186,11 +188,15 @@ window.addEventListener('DOMContentLoaded', () => {
             tile.classList.add(`player${currentPlayer}`);
             updateBoard(index);
             handleResultValidation();
+            sleep(1000)
+
+
             changePlayer();
         }
     }
     
     const move = (tile, index) => {
+
         tile.innerText = currentPlayer;
         tile.classList.add(`player${currentPlayer}`);
         updateBoard(index);

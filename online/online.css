@@ -2,8 +2,8 @@ body{
     padding: 0;
     margin: 0;
     font-family: 'Itim', cursive;
-    background-color: #FF3CAC;
-    background-image: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+    background-color: hsl(0, 0%, 29%);
+    background-image: linear-gradient(225deg, #383838 0%, #424242 50%, #303030 100%);
     height : 100vh;
     color: white
 }
