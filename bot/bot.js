@@ -49,10 +49,34 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 
             }
-            while (this.checkWhetherNeedToChangeObjective()){
+            let checked = []
+            let t = true
+            while (this.checkWhetherNeedToChangeObjective() && t){
 
                 this.objective = getRandomItem(winningConditions)
+                let already_there = false
+                checked.forEach(o => {
+                    if (o == this.objective){
+                        already_there = true
+                    }
+                })
+                if (!already_there){
+                    checked.push(this.objective)
 
+                }
+
+                if (winningConditions.length == checked.length){
+                    let index = 0
+                    for (let place in board){
+
+                        if (board[place] == ''){
+                            t = false
+                            return index
+                         
+                        }
+                        index += 1
+                    }
+                }
 
             }
 
@@ -80,6 +104,7 @@ window.addEventListener('DOMContentLoaded', () => {
             if (!board.includes('')){
                 shouldChange = false    
             }
+
             return shouldChange
         }
     }
