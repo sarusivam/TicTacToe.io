@@ -92,7 +92,8 @@ document.addEventListener('DOMContentLoaded', function(){
         else if (message.data == 'restart'){
             tiles.forEach( (tile, index) => {
                 tile.innerHTML = '';
-                tile.classList = [];
+                tile.classList.remove(`player${opponentSymbol}`);
+                tile.classList.remove(`player${yourSymbol}`);
             });
             console.log(yourSymbol, "BEFORe")
             if (yourSymbol == 'X'){
