@@ -92,7 +92,9 @@ document.addEventListener('DOMContentLoaded', function(){
         else if (message.data == 'restart'){
             tiles.forEach( (tile, index) => {
                 tile.innerHTML = '';
+                tile.classList = [];
             });
+            console.log(yourSymbol, "BEFORe")
             if (yourSymbol == 'X'){
                 yourSymbol = 'O'
                 opponentSymbol = 'X'
@@ -101,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 yourSymbol = 'X'
                 opponentSymbol = 'O'
             }
+            console.log(yourSymbol, "AFTER")
         }
         else{
             console.log(message.data)
