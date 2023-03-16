@@ -156,18 +156,22 @@ window.addEventListener('DOMContentLoaded', () => {
 
     if (!board.includes(''))
         announce(TIE);
+
     }
 
     const announce = (type) => {
         switch(type){
             case PLAYERO_WON:
                 announcer.innerHTML = 'Bot has Won';
+
                 break;
             case PLAYERX_WON:
                 announcer.innerHTML = 'You have Won';
+  
                 break;
             case TIE:
                 announcer.innerText = 'Tie';
+
         }
         announcer.classList.remove('hide');
     };
@@ -188,11 +192,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const changePlayer = () => {
 
-        playerDisplay.classList.remove(`player${currentPlayer}`);
+
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
 
-        playerDisplay.innerText = currentPlayer;
-        playerDisplay.classList.add(`player${currentPlayer}`);
+
         if (currentPlayer == 'O' && isGameActive    ){
             waiting = true
             var move_index = bot.decideMove()
