@@ -103,7 +103,7 @@ async def new_client_connected(client_scoket, path):
                             games.remove(game)
                     await send_message(message, [other_player])
                     await send_message('Play', [other_player])
-                    await send_message('Wait', [client_scoket])
+                    await send_message('Wait', [client_scoket]) 
                     if not('' in game.board):
                         print('TIE')
                         game.clear()

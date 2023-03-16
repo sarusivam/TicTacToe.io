@@ -3,6 +3,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const playerDisplay = document.querySelector('.display-player');
     const resetButton = document.querySelector('#reset');
     const announcer = document.querySelector('.announcer');
+    const turn = document.getElementById("turn");
 
     let board = ['', '', '', '', '', '', '', '', ''];
     let currentPlayer = 'X';
@@ -68,6 +69,7 @@ window.addEventListener('DOMContentLoaded', () => {
             case TIE:
                 announcer.innerText = 'Tie';
         }
+        turn.classList.add('hide')
         announcer.classList.remove('hide');
     };
 
@@ -84,10 +86,13 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     const changePlayer = () => {
-        playerDisplay.classList.remove(`player${currentPlayer}`);
-        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-        playerDisplay.innerText = currentPlayer;
-        playerDisplay.classList.add(`player${currentPlayer}`);
+        if (isGameActive){
+            playerDisplay.classList.remove(`player${currentPlayer}`);
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            playerDisplay.innerText = currentPlayer;
+            playerDisplay.classList.add(`player${currentPlayer}`);
+        }
+
     }
 
     const userAction = (tile, index) => {
@@ -104,7 +109,7 @@ window.addEventListener('DOMContentLoaded', () => {
         board = ['', '', '', '', '', '', '', '', ''];
         isGameActive = true;
         announcer.classList.add('hide');
-
+        turn.classList.remove('hide');
         if (currentPlayer === 'O') {
             changePlayer();
         }
