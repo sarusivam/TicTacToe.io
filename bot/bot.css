@@ -6,7 +6,7 @@
 
 .background {
     background-color: hsl(0, 0%, 29%);
-    background-image: linear-gradient(225deg, #424242 0%, #424242 50%, #424242 100%);
+	background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
 
 
     height: 100vh;
