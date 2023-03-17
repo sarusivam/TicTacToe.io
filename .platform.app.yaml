@@ -30,5 +30,7 @@ web:
         root: 'online'
       '/bot':
         root: 'bot'
+      '/icons':
+        root: 'icons'
       '/ws':
         passthru: true
