@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Basically ther classic tic tac toe recreated but with many more stuff like online play and 2 player and bot play....">
+    <meta name="keywords" content="multiplayer,online,tictactoe,fun,simple,bot,2player,timepass,games,classic">
+    <meta name="author" content="Sarvesh Sivam">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="tictactoe.css">   
+    <link rel="icon" href="../icons/tictactoebanner.jpg">
+
+    <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+    <title>TicTacToe.io</title>
+    <div class="row text-center">
+        <div class="col">
+            <h1 class="title">Tic Tac Toe</h1>
+        </div>
+    </div>
+
+</head>
+<body>
+
+    <section id="container" class="row my-5">
+        <div class="tile" style="border-left: none; border-top: none;"></div>
+        <div class="tile" style="border-top: none;"></div>
+        <div class="tile" style="border-right: none; border-top: none;"></div>
+        <div class="tile" style="border-left: none"></div>
+        <div class="tile"></div>
+        <div class="tile" style="border-right: none;"></div>
+        <div class="tile" style="border-left: none; border-bottom: none;"></div>
+        <div class="tile" style="border-bottom: none;"></div>
+        <div class="tile" style="border-bottom: none; border-right: none;"></div>
+    </section>
+    <div class="row text-center my-3">
+        <div class="col">
+            <input class="btn btn-outline-light btn-lg" value="Play with random online player" onclick="window.location.href='online/online.html';" style="width: 40vw; cursor: pointer;" id="online"></input>
+        </div>
+    </div> 
+    <div class="row text-center my-3">
+        <div class="col">
+            <input class="btn btn-outline-light btn-lg" onclick="window.location.href='2player/2player.html'" value="Play with your friend" style="width: 40vw; cursor: pointer;" id="2player"></input>
+        </div>
+    </div>
+    <div class="row text-center my-3">
+        <div class="col">
+            <input class="btn btn-outline-light btn-lg" value="Play with Bot" onclick="window.location.href = 'bot/bot.html'" style="width: 40vw; cursor: pointer;" id="bot"></input>
+        </div>
+    </div>
+    
+</body>
+<script src="startPage.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</html>     
