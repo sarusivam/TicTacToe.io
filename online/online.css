@@ -17,7 +17,12 @@ body{
     color: white
 }
 
-
+body{
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
 
 .title {
     color: white;
