@@ -98,7 +98,7 @@ async def new_client_connected(client_scoket, path):
                         if a == '' or b == '' or c == '':
                             continue
                         if a == b and b == c:
-                            await send_message('Win', [client_scoket])
+                            await send_message('Win', [])
                             await send_message('Lose', [other_player])
                             games.remove(game)
                     await send_message(message, [other_player])
