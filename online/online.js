@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if (message.data == 'Connected'){
             loader.remove()
             loaderText.innerHTML = 'Tic Tac Toe'
-
+            document.title = "Tic Tac Toe(Playing...)"
             b.hidden = false
         }
         else if (message.data == 'Play'){
