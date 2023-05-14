@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function(){
     const websocketClient = new WebSocket('wss://' + document.location.hostname + '/ws')
-    // const websocketClient = new WebSocket('ws://localhost' + document.location.hostname)
+    // const websocketClient = new WebSocket('ws://localhost:8080/' + document.location.hostname)
     const loader = document.getElementById('spinner')
     const loaderText = document.getElementById('spinner text')
     const b = document.getElementById('container')
@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function(){
             tile.innerText = yourSymbol;
             tile.classList.add(`player${yourSymbol}`);
             websocketClient.send('Finished ' + index)
+            waiting = true;
 
         }
     }
@@ -50,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function(){
             const addTimer = setInterval(function() {
                 if (!waiting){
                     timer++
-                    turn.innerHTML = 'Your turn (Time left : ' + (60 - timer) + 'seconds )' 
+                    turn.innerHTML = 'Your turn </br><p style="font-size: 20px; color: red;">' + (60 - timer) + ' seconds left<p>' 
                     if (timer > 59){
                         websocketClient.send('TimeUp')
                     } 
