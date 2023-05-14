@@ -47,7 +47,10 @@ async def send_message(message : str, target_clients=all_clients):
 async def new_client_connected(client_scoket, path):
     print('New client !')
     all_clients.append(client_scoket)
+    num_games_free = 0
+
     if len(games) == 0:
+        
         print('Created a New Game for Client')
         games.append(Game([client_scoket], ['', '', '', '', '', '', '', '', '']))
     else:
@@ -67,6 +70,7 @@ async def new_client_connected(client_scoket, path):
 
                 break
         else:
+            await send_message()
             games.append(Game([client_scoket], ['', '', '', '', '', '', '', '', '']))
     while True:
         try:
@@ -120,7 +124,9 @@ async def new_client_connected(client_scoket, path):
 
 async def start_server():
     print('SERVER STARTED')
+
     await websockets.serve(new_client_connected, '0.0.0.0', os.environ["PORT"])
+
 
 if __name__ == '__main__':
     event_loop = asyncio.get_event_loop()
