@@ -37,9 +37,19 @@ class Game():
         self.playerX, self.playerY = self.playerY, self.playerX
 
 
-    
-    
-
+def winner(board):
+    for winning_condition in winning_conditions:
+        a = board[winning_condition[0]]
+        b = board[winning_condition[1]]
+        c = board[winning_condition[2]]
+        if a == '' or b == '' or c == '':
+            continue
+        if a == b and b == c:    
+            return a
+            break
+    else:
+        return False
+def isTie(board): return True if not('' in board) else False
 async def send_message(message : str, target_clients=all_clients):
     for client in target_clients:
         await client.send(message)
@@ -75,7 +85,8 @@ async def new_client_connected(client_scoket, path):
             for game in games:
                 if client_scoket in game.players:  
                     other_player = game.players[0] if client_scoket == game.players[1] else game.players[1]
-                    await send_message('Win', [other_player])
+                    if other_player != "Bot": 
+                        await send_message('Win', [other_player])
 
 
 
@@ -85,38 +96,92 @@ async def new_client_connected(client_scoket, path):
 
             for game in games:
                 if client_scoket in game.players:
-                    other_player = game.players[0] if client_scoket == game.players[1] else game.players[1]
-                    if client_scoket == game.playerX:
-                        # print(games, games[0].board, games[0].players, game, message)
-                        game.board[int(message)] = 'X'
-                    else:
-                        game.board[int(message)] = 'O'
-                    for winning_condition in winning_conditions:
-                        a = game.board[winning_condition[0]]
-                        b = game.board[winning_condition[1]]
-                        c = game.board[winning_condition[2]]
-                        if a == '' or b == '' or c == '':
-                            continue
-                        if a == b and b == c:
-                            await send_message('Win', [client_scoket])
-                            await send_message('Lose', [other_player])
-                            games.remove(game)
-                    await send_message(message, [other_player])
-                    await send_message('Play', [other_player])
-                    await send_message('Wait', [client_scoket]) 
-                    if not('' in game.board):
-                        print('TIE')
-                        game.clear()
-                        game.restart()
+                    if 'Bot' not in game.players:
+                        other_player = game.players[0] if client_scoket == game.players[1] else game.players[1]
+                        if client_scoket == game.playerX:
+                            # print(games, games[0].board, games[0].players, game, message)
+                            game.board[int(message)] = 'X'
+                        else:
+                            game.board[int(message)] = 'O'
+                        for winning_condition in winning_conditions:
+                            a = game.board[winning_condition[0]]
+                            b = game.board[winning_condition[1]]
+                            c = game.board[winning_condition[2]]
+                            if a == '' or b == '' or c == '':
+                                continue
+                            if a == b and b == c:
+                                await send_message('Win', [client_scoket])
+                                await send_message('Lose', [other_player])
+                                games.remove(game)
+                        await send_message(message, [other_player])
+                        await send_message('Play', [other_player])
+                        await send_message('Wait', [client_scoket]) 
+                        if not('' in game.board):
+                            print('TIE')
+                            game.clear()
+                            game.restart()
 
-                        await send_message('restart', game.players)
-                    break
+                            await send_message('restart', game.players)
+                        break
+                    else:
+    
+                        await send_message("Wait", [client_scoket])
+                        game.board[int(message)] = 'X'
+                        if winner(game.board) == 'X':
+                            await send_message('Win', [client_scoket])                                
+                            games.remove(game)
+
+                        elif isTie(game.board):
+                            game.clear()
+                            await send_message('restart', [client_scoket])
+                        if (len([spot for spot in game.board if spot == '']) != len(game.board)):
+
+                        
+                            free_spots = [i for i in range(len(game.board)) if game.board[i] == '']
+                            board_copy = game.board
+                            move = random.choice(free_spots)
+                            for spot in free_spots:
+                    
+                                board_copy[spot] = 'X'
+                                if winner(board_copy) == 'X':
+                                    move = spot
+                                board_copy[spot] = ''
+                            for spot in free_spots:
+                                board_copy[spot] = 'O'
+                                if winner(board_copy) == 'O':
+                                    move = spot
+                                board_copy[spot] = ''
+
+                            game.board[move] = 'O'
+                            await send_message(str(move), [client_scoket])
+                            if winner(game.board) == 'O':
+                                await send_message('Lose', [client_scoket])
+                                games.remove(game)
+
+                            elif isTie(game.board):
+                                game.clear()
+                                await send_message('restart', [client_scoket])
+
+
+                        await send_message('Play', [client_scoket])
+
         if 'TimeUp' in new_message:
             for game in games:
                 if client_scoket in game.players:
                     other_player = game.players[0] if client_scoket == game.players[1] else game.players[1]
                     await send_message('Lose', [client_scoket])
-                    await send_message('Win', [other_player])
+                    if other_player != "Bot": 
+                        await send_message('Win', [other_player])
+                    games.remove(game)
+                    break
+        if 'sendbot' in new_message:
+            for game in games:
+                if client_scoket in game.players:
+                    game.occupied = True
+                    game.players.append('Bot')
+                await send_message('Connected', [client_scoket])
+                await send_message('Play', [client_scoket])
+                await send_message('You X', [client_scoket])
 
 async def start_server():
     print('SERVER STARTED')
