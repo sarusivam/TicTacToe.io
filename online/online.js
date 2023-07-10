@@ -1,7 +1,3 @@
-function sleep(delay) {
-    var start = new Date().getTime();
-    while (new Date().getTime() < start + delay);
-}
 document.addEventListener('DOMContentLoaded', function(){
     const websocketClient = new WebSocket('wss://' + document.location.hostname + '/ws')
     // const websocketClient = new WebSocket('ws://localhost:8080/' + document.location.hostname)
@@ -14,9 +10,7 @@ document.addEventListener('DOMContentLoaded', function(){
     var waiting
     var yourSymbol
     var opponentSymbol
-    var Connected = false
-    var bot = false;
-    let timer = 0
+    
     const isValidAction = (tile) => {
         if (tile.innerText === 'X' || tile.innerText === 'O'){
             return false;
@@ -24,13 +18,13 @@ document.addEventListener('DOMContentLoaded', function(){
 
         return true;
     };
-    
+
     const userAction = (tile, index) => {
         if(isValidAction(tile) && waiting == false) {
             tile.innerText = yourSymbol;
             tile.classList.add(`player${yourSymbol}`);
             websocketClient.send('Finished ' + index)
-            waiting = true
+            waiting = true;
 
         }
     }
@@ -40,54 +34,38 @@ document.addEventListener('DOMContentLoaded', function(){
         b.hidden = true
             
     }
-    setInterval(function(){
-    if (!Connected){
-        websocketClient.send("sendbot")
-        bot = true
-    }
-    }, 5000)
     websocketClient.onmessage = function(message){
         if (message.data == 'Connected'){
             loader.remove()
             loaderText.innerHTML = 'Tic Tac Toe'
-            Connected = true
             document.title = "Tic Tac Toe(Playing...)"
             b.hidden = false
-            if (!bot){
-                const addTimer = setInterval(function() {
-                    if (!waiting){
-                        timer += 1
-                        turn.innerHTML = 'Your turn </br><p style="font-size: 20px; color: red;">' + (60 - timer) + ' seconds left<p>' 
-                        if (timer > 59){
-                            websocketClient.send('TimeUp')
-                        } 
-                    } else {
-                        timer = 0
-                    }
-    
-                }, 1000)
-            }
-
         }
         else if (message.data == 'Play'){
-
-            turn.innerHTML = 'Opponents turn'
-            waiting = false
+            let timer = 0
             turn.innerHTML = 'Your turn'
-
-           
+            waiting = false
             tiles.forEach( (tile, index) => {
                 tile.addEventListener('click', () => userAction(tile, index));
             });
+            const addTimer = setInterval(function() {
+                if (!waiting){
+                    timer++
+                    turn.innerHTML = 'Your turn </br><p style="font-size: 20px; color: red;">' + (60 - timer) + ' seconds left<p>' 
+                    if (timer > 59){
+                        websocketClient.send('TimeUp')
+                    } 
+                } else {
+                    timer = 0
+                }
 
+            }, 1000)
                 
         }
-
         else if (message.data == 'Wait'){
         
             turn.innerHTML = 'Opponents turn'
             waiting = true
-            timer = 0
         }
         else if (message.data == 'You X'){
 
@@ -120,28 +98,23 @@ document.addEventListener('DOMContentLoaded', function(){
                 tile.classList.remove(`player${opponentSymbol}`);
                 tile.classList.remove(`player${yourSymbol}`);
             });
-            if (!bot){
-                if (yourSymbol == 'X'){
-                    yourSymbol = 'O'
-                    opponentSymbol = 'X'
+            console.log(yourSymbol, "BEFORe")
+            if (yourSymbol == 'X'){
+                yourSymbol = 'O'
+                opponentSymbol = 'X'
 
-                } else{
-                    yourSymbol = 'X'
-                    opponentSymbol = 'O'
-                }
+            } else{
+                yourSymbol = 'X'
+                opponentSymbol = 'O'
             }
+            console.log(yourSymbol, "AFTER")
         }
         else{
-        
             console.log(message.data)
             tiles.forEach( (tile, index) => {
                 if (index == message.data){
-                    if (bot){
-                        sleep(Math.random() * 2000)
-                    }
                     tile.innerText = opponentSymbol;
                     tile.classList.add(`player${opponentSymbol}`);
-
                 }
             });
         }
