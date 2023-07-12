@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function(){
             tile.innerText = yourSymbol;
             tile.classList.add(`player${yourSymbol}`);
             websocketClient.send('Finished ' + index)
+            clearInterval(addTimer)
             waiting = true;
 
         }
