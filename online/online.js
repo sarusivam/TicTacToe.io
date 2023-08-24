@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', function(){
     var waiting
     var yourSymbol
     var opponentSymbol
-    
+    var timer;
+    var addTimer;
     const isValidAction = (tile) => {
         if (tile.innerText === 'X' || tile.innerText === 'O'){
             return false;
@@ -23,11 +24,12 @@ document.addEventListener('DOMContentLoaded', function(){
         if(isValidAction(tile) && waiting == false) {
             tile.innerText = yourSymbol;
             tile.classList.add(`player${yourSymbol}`);
-            websocketClient.send('Finished ' + index)
             clearInterval(addTimer)
+            websocketClient.send('Finished ' + index)
             waiting = true;
-
         }
+
+
     }
 
     websocketClient.onopen = function(){
@@ -43,21 +45,18 @@ document.addEventListener('DOMContentLoaded', function(){
             b.hidden = false
         }
         else if (message.data == 'Play'){
-            let timer = 0
-            turn.innerHTML = 'Your turn'
+            timer = 0
             waiting = false
             tiles.forEach( (tile, index) => {
                 tile.addEventListener('click', () => userAction(tile, index));
             });
-            const addTimer = setInterval(function() {
+            addTimer = setInterval(function() {
                 if (!waiting){
                     timer++
                     turn.innerHTML = 'Your turn </br><p style="font-size: 20px; color: red;">' + (60 - timer) + ' seconds left<p>' 
                     if (timer > 59){
                         websocketClient.send('TimeUp')
                     } 
-                } else {
-                    timer = 0
                 }
 
             }, 1000)
@@ -66,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function(){
         else if (message.data == 'Wait'){
         
             turn.innerHTML = 'Opponents turn'
-            waiting = true
         }
         else if (message.data == 'You X'){
 
