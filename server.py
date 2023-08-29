@@ -102,7 +102,7 @@ async def new_client_connected(client_scoket, path):
                             await send_message('Lose', [other_player])
                             games.remove(game)
                     await send_message(message, [other_player])
-                    await send_message('Play', [other_player])
+                    await send_message('Wait', [other_player])
                     await send_message('Wait', [client_scoket]) 
                     if not('' in game.board):
                         print('TIE')
@@ -110,6 +110,8 @@ async def new_client_connected(client_scoket, path):
                         game.restart()
 
                         await send_message('restart', game.players)
+                    await send_message('Play', [other_player])
+                    
                     break
         if 'TimeUp' in new_message:
             for game in games:
@@ -120,8 +122,8 @@ async def new_client_connected(client_scoket, path):
 
 async def start_server():
     print('SERVER STARTED')
-    await websockets.serve(new_client_connected, '0.0.0.0', os.environ["PORT"])
-    # await websockets.serve(new_client_connected, 'localhost', 8080)
+    # await websockets.serve(new_client_connected, '0.0.0.0', os.environ["PORT"])
+    await websockets.serve(new_client_connected, 'localhost', 8080)
 
 if __name__ == '__main__':
     event_loop = asyncio.get_event_loop()
