@@ -33,4 +33,6 @@ web:
       '/icons':
         root: 'icons'
       '/ws':
+        headers:
+          Access-Control-Allow-Origin: "*"
         passthru: true
