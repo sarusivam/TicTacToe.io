@@ -3,19 +3,11 @@ body{
     margin: 0;
     font-family: 'Itim', cursive;
     background-color: hsl(0, 0%, 29%);
-	background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
-    height : 100vh;
-    color: white
+
+	background-color: #2F3C7E;
+    color: #FBEAEB;
 }
 
-
-body{
-    padding: 0;
-    margin: 0;
-    font-family: 'Itim', cursive;
-    background-color: #12181B;
-    color: white
-}
 
 body{
     height: 100%;
@@ -23,16 +15,15 @@ body{
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
-
 .title {
-    color: white;
+    color: #FBEAEB;
     text-align: center;
     font-size: 60px;
     margin-top: 3%;
 }
-
+ß
 .display {
-    color: white;
+    color: #FBEAEB;
     font-size: 25px;
     text-align: center;
     margin-top: 1em;
@@ -53,7 +44,7 @@ body{
 }
 
 .tile {
-    border: 1px solid white;
+    border: 1px solid #FBEAEB;
     min-width: 100px;
     min-height: 100px;
     display: flex;
@@ -65,11 +56,11 @@ body{
 
 
 .playerX {
-    color: #09C372;
+    color: #ffaa00;
 }
 
 .playerO {
-    color: #498AFB;
+    color: #009b34;
 }
 
 .controls {
@@ -81,7 +72,7 @@ body{
 }
 
 .controls button {
-    color: white;
+    color: #FBEAEB;
     padding: 8px;
     border-radius: 8px;
     border: none;
@@ -95,7 +86,7 @@ body{
 }
 
 #reset {
-    background-color: #FF3860;
+    background-color: #ff9100;
 }
 
 .center{
