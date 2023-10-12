@@ -94,3 +94,20 @@ body{
     text-align: center;
     font-size: 40px;
 }
+a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 16px 32px;
+    font-size: 20px;
+  }
+  
+  a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+  .previous {
+    background-color: #2F3C7E;
+    color: white;
+  }
+  
