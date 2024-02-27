@@ -4,7 +4,7 @@ This is the simple and classic tic tyac toe game made
 
 ## Link to project
 
-Go to your browser and type <a href='https://tictactoe.io'>tictactoe.io</a>
+Go to your browser and type <a href='https://tictactoelive.com'>tictactoe.io</a>
 
 ## Instructions
 
